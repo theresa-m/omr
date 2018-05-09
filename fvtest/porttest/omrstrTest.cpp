@@ -1377,32 +1377,31 @@ TEST(PortStrTest, str_Mutf8ToLatin1)
 	const char *testName = "omrstr_Mutf8ToLatin1";
 	char outBuff[TEST_BUF_LEN];
 	int32_t mutf8DataLength = sizeof(mutf8DataForLatin1);
-	int32_t expectedStringLength = expectedLatin1ToFromMutf8Length;
+	char expectedResult[expectedLatin1ToFromMutf8Length];
 	int32_t convertedStringLength = 0;
-	char expectedResult[expectedStringLength];
 	uint32_t i = 0;
 
 	reportTestEntry(OMRPORTLIB, testName);
 	memset(outBuff, 0, sizeof(outBuff));
 
 	/* setup result comparison struct */
-	memset(expectedResult, 0, expectedStringLength);
+	memset(expectedResult, 0, expectedLatin1ToFromMutf8Length);
 	for (i = 0; i < sizeof(expectedResult); ++i) {
 		expectedResult[i] = (char)i; /* create all Latin-1 code points */
 	}
 
 	convertedStringLength = omrstr_convert(J9STR_CODE_MUTF8, J9STR_CODE_LATIN1, mutf8DataForLatin1, mutf8DataLength, outBuff, sizeof(outBuff));
 
-	if (convertedStringLength != expectedStringLength) {
-		outputErrorMessage(PORTTEST_ERROR_ARGS, "buffer length wrong.  Expected %d actual %d\n", expectedStringLength, convertedStringLength);
+	if (convertedStringLength != expectedLatin1ToFromMutf8Length) {
+		outputErrorMessage(PORTTEST_ERROR_ARGS, "buffer length wrong.  Expected %d actual %d\n", expectedLatin1ToFromMutf8Length, convertedStringLength);
 	}
-	if (!compareBytes(expectedResult, outBuff, expectedStringLength)) {
+	if (!compareBytes(expectedResult, outBuff, expectedLatin1ToFromMutf8Length)) {
 		outputErrorMessage(PORTTEST_ERROR_ARGS, "Converted string wrong.");
 	}
 	/* test string length */
 	convertedStringLength = omrstr_convert(J9STR_CODE_MUTF8, J9STR_CODE_LATIN1, mutf8DataForLatin1, mutf8DataLength, NULL, 0);
-	if (convertedStringLength != expectedStringLength) {
-		outputErrorMessage(PORTTEST_ERROR_ARGS, "buffer length wrong.  Expected %d actual %d\n", expectedStringLength, convertedStringLength);
+	if (convertedStringLength != expectedLatin1ToFromMutf8Length) {
+		outputErrorMessage(PORTTEST_ERROR_ARGS, "buffer length wrong.  Expected %d actual %d\n", expectedLatin1ToFromMutf8Length, convertedStringLength);
 	}
 	reportTestExit(OMRPORTLIB, testName);
 }
